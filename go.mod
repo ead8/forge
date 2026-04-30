@@ -1,4 +1,4 @@
-module github.com/akdavidsson/smelt
+module github.com/ead8/forge
 
 go 1.24.0
 

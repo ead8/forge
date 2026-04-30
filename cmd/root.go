@@ -16,22 +16,30 @@ import (
 	"github.com/go-rod/rod/lib/proto"
 	"github.com/spf13/cobra"
 
-	"github.com/akdavidsson/smelt/internal/capture"
-	"github.com/akdavidsson/smelt/internal/config"
-	"github.com/akdavidsson/smelt/internal/extract"
-	"github.com/akdavidsson/smelt/internal/output"
-	"github.com/akdavidsson/smelt/internal/schema"
+	"github.com/ead8/forge/internal/capture"
+	"github.com/ead8/forge/internal/config"
+	"github.com/ead8/forge/internal/extract"
+	"github.com/ead8/forge/internal/output"
+	"github.com/ead8/forge/internal/schema"
 )
 
+const (
+	httpTimeout     = 30 * time.Second
+	maxResponseSize = 100 << 20 // 100 MB
+	maxWaitSeconds  = 300
+)
+
+var httpClient = &http.Client{Timeout: httpTimeout}
+
 var (
-	flagFormat  string
-	flagOutput  string
-	flagQuery   string
-	flagSchema  bool
-	flagOCR     bool
-	flagModel   string
-	flagRaw     bool
-	flagVerbose bool
+	flagFormat   string
+	flagOutput   string
+	flagQuery    string
+	flagSchema   bool
+	flagOCR      bool
+	flagModel    string
+	flagRaw      bool
+	flagVerbose  bool
 	flagTable    int
 	flagAll      bool
 	flagHeadless bool
@@ -39,9 +47,9 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "smelt [input]",
+	Use:   "forge [input]",
 	Short: "Extract structured data from PDFs and HTML using AI-inferred schemas",
-	Long: `smelt takes a PDF or HTML file, extracts tabular data, infers a schema
+	Long: `forge takes a PDF or HTML file, extracts tabular data, infers a schema
 using the Anthropic API, and outputs JSON or CSV.`,
 	Args:          cobra.MaximumNArgs(1),
 	RunE:          run,
@@ -87,7 +95,7 @@ func run(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		// Read from stdin
 		inputName = "stdin"
-		inputData, err = os.ReadFile("/dev/stdin")
+		inputData, err = io.ReadAll(os.Stdin)
 		if err != nil {
 			return fmt.Errorf("reading stdin: %w", err)
 		}
@@ -218,9 +226,9 @@ func fetchURL(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; smelt/1.0; +https://github.com/akdavidsson/smelt)")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; forge/1.0; +https://github.com/ead8/forge)")
 	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -228,7 +236,7 @@ func fetchURL(url string) ([]byte, error) {
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("HTTP %d", resp.StatusCode)
 	}
-	return io.ReadAll(resp.Body)
+	return io.ReadAll(io.LimitReader(resp.Body, maxResponseSize))
 }
 
 // fetchURLHeadless fetches a URL using a headless Chromium browser, waiting
@@ -255,9 +263,13 @@ func fetchURLHeadless(rawURL string) ([]byte, error) {
 		fmt.Fprintln(os.Stderr, "warning: page idle timeout, using partial render")
 	}
 
-	// Optional extra wait for SPAs that load data after idle.
-	if flagWait > 0 {
-		time.Sleep(time.Duration(flagWait) * time.Second)
+	// Optional extra wait for SPAs that load data after idle (clamped to avoid runaway waits).
+	wait := flagWait
+	if wait > maxWaitSeconds {
+		wait = maxWaitSeconds
+	}
+	if wait > 0 {
+		time.Sleep(time.Duration(wait) * time.Second)
 	}
 
 	html, err := page.HTML()

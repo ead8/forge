@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/akdavidsson/smelt/cmd"
+	"github.com/ead8/forge/cmd"
 )
 
 func main() {

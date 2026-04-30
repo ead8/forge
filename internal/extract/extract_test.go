@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/akdavidsson/smelt/internal/capture"
-	"github.com/akdavidsson/smelt/internal/schema"
+	"github.com/ead8/forge/internal/capture"
+	"github.com/ead8/forge/internal/schema"
 )
 
 // ── coerceValue ──────────────────────────────────────────────────────────────

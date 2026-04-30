@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 92" width="380" height="92">
+  <!-- Flame icon: outer -->
+  <path d="M24 76 C8 61 5 38 15 22 C19 13 21 4 18 0
+           C30 14 27 32 33 43
+           C37 29 39 15 36 2
+           C49 20 45 43 38 55
+           C42 46 45 35 42 24
+           C51 41 47 62 38 72
+           C36 61 34 48 31 39
+           C33 54 29 67 24 76 Z"
+        fill="#ea580c"/>
+  <!-- Flame: mid -->
+  <path d="M24 69 C12 56 12 40 18 27
+           C22 20 23 12 21 6
+           C30 19 28 33 32 43
+           C35 32 37 21 34 11
+           C43 27 41 46 35 57
+           C37 48 40 38 37 29
+           C43 44 40 61 33 69 Z"
+        fill="#fb923c"/>
+  <!-- Flame: inner glow -->
+  <path d="M24 61 C17 50 17 37 22 28
+           C24 22 25 14 23 8
+           C30 21 28 33 31 42
+           C33 33 34 24 32 16
+           C38 30 37 47 31 58 Z"
+        fill="#fef08a"/>
+
+  <!-- "forge" wordmark -->
+  <text x="72" y="63"
+        font-family="ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace"
+        font-size="52"
+        font-weight="800"
+        fill="#111827"
+        letter-spacing="-1">forge</text>
+
+  <!-- tagline -->
+  <text x="74" y="81"
+        font-family="ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace"
+        font-size="11.5"
+        fill="#9ca3af"
+        letter-spacing="0.6">PDF · HTML · URL  →  JSON · CSV</text>
+</svg>

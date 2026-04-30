@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/akdavidsson/smelt/internal/extract"
+	"github.com/ead8/forge/internal/extract"
 )
 
 // WriteParquet is a stub — parquet output is not yet implemented.

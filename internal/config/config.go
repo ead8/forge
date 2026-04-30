@@ -10,7 +10,7 @@ import (
 
 const defaultModel = "claude-sonnet-4-6"
 
-// Config holds runtime configuration for smelt.
+// Config holds runtime configuration for forge.
 type Config struct {
 	APIKey  string `yaml:"api_key"`
 	Model   string `yaml:"model"`
@@ -25,7 +25,7 @@ func Load() (*Config, error) {
 	}
 
 	// Try reading config file (optional)
-	cfgPath := filepath.Join(os.Getenv("HOME"), ".smelt", "config.yaml")
+	cfgPath := filepath.Join(os.Getenv("HOME"), ".forge", "config.yaml")
 	if data, err := os.ReadFile(cfgPath); err == nil {
 		if err := yaml.Unmarshal(data, cfg); err != nil {
 			return nil, fmt.Errorf("parsing config file %s: %w", cfgPath, err)
@@ -48,7 +48,7 @@ func Load() (*Config, error) {
 // Validate returns an error if the configuration is unusable.
 func (c *Config) Validate() error {
 	if c.APIKey == "" {
-		return fmt.Errorf("ANTHROPIC_API_KEY is not set; export it or add api_key to ~/.smelt/config.yaml")
+		return fmt.Errorf("ANTHROPIC_API_KEY is not set; export it or add api_key to ~/.forge/config.yaml")
 	}
 	return nil
 }

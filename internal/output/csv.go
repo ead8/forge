@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/akdavidsson/smelt/internal/extract"
+	"github.com/ead8/forge/internal/extract"
 )
 
 // WriteCSV writes the extraction result as CSV with a header row.

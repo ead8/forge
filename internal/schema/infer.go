@@ -16,6 +16,7 @@ const (
 	anthropicVersion     = "2023-06-01"
 	inferMaxTokens       = 1024
 	inferTimeout         = 30 * time.Second
+	maxAPIResponseSize   = 1 << 20 // 1 MB
 )
 
 const systemPrompt = `You are a data schema inference engine. Your only output is a valid JSON object.
@@ -94,7 +95,7 @@ func Infer(ctx context.Context, req InferenceRequest) (*Schema, error) {
 	}
 	defer resp.Body.Close()
 
-	respBytes, err := io.ReadAll(resp.Body)
+	respBytes, err := io.ReadAll(io.LimitReader(resp.Body, maxAPIResponseSize))
 	if err != nil {
 		return nil, fmt.Errorf("reading response: %w", err)
 	}

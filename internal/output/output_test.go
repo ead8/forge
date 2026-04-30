@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/akdavidsson/smelt/internal/extract"
-	"github.com/akdavidsson/smelt/internal/schema"
+	"github.com/ead8/forge/internal/extract"
+	"github.com/ead8/forge/internal/schema"
 )
 
 func makeResult(cols []schema.Column, records []extract.Record) *extract.Result {

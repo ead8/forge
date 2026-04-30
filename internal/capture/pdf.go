@@ -19,7 +19,7 @@ type PDFCapturer struct{}
 // It tries pdftotext first (handles font encoding correctly), then falls
 // back to parsing raw pdfcpu content streams.
 func (p *PDFCapturer) Capture(input []byte) ([]Region, error) {
-	tmpDir, err := os.MkdirTemp("", "smelt-pdf-*")
+	tmpDir, err := os.MkdirTemp("", "forge-pdf-*")
 	if err != nil {
 		return nil, fmt.Errorf("creating temp dir: %w", err)
 	}
